@@ -1,4 +1,5 @@
 
+import json
 
 class Grades:
     """
@@ -17,19 +18,23 @@ class Grades:
         self.midterm = midterm
         self.project = project
         self.final = final
-        
-    def set_all(self, quiz_1=None, quiz_2=None, midterm=None, project=None, final=None):
-        """
-        Sets the grades all at once. 
-        When calling this function, the caller can specify
-        the parameters to be set like so:
-        Grades().set_all(midterm=None, project=None)
-        """
-        self.quiz_1 = quiz_1
-        self.quiz_2 = quiz_2
-        self.midterm = midterm
-        self.project = project
-        self.final = final
+    
+    def load_grades_from_json(self,filepath):
+        try:
+            with open(filepath, 'r') as f:
+                    data = json.load(f)
+            self.quiz_1 = data["quiz_1"]
+            self.quiz_2 = data["quiz_2"]
+            self.midterm = data["midterm"]
+            self.project = data["project"]
+            self.final = data["final"]
+        except FileNotFoundError:
+            print(f"Error: File not found at {filepath}")
+            return None
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON format in {filepath}")
+            return None
+        return data
         
     def __str__(self) -> str:
         """
