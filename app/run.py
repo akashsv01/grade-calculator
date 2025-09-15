@@ -11,7 +11,11 @@ my_grades = Grades()
 weights = GradeWeights()
 
 # Set grades achieved so far
-my_grades.quiz_1 = 0.78 # Received 78% in the first quiz
+my_grades.quiz_1 = float(input("Enter your grade in Quiz 1 [from 0.0-1.0]: "))
+my_grades.quiz_2 = float(input("Enter your grade in Quiz 2 [from 0.0-1.0]: "))
+my_grades.midterm = float(input("Enter your grade in Midterm [from 0.0-1.0]: "))
+my_grades.project = float(input("Enter your grade in project [from 0.0-1.0]: "))
+my_grades.final = float(input("Enter your grade in the Final exam [from 0.0-1.0]: "))
 
 # Print out the grades to console
 print(my_grades)
