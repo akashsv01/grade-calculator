@@ -1,40 +1,44 @@
 
 import json
 
-class Grades:
-    """
-    Stores all individual class grades.
-    """
+from pydantic import BaseModel, model_validator 
+
+class Grades(BaseModel): 
     
-    def __init__(self, quiz_1=None, quiz_2=None, midterm=None, project=None, final=None) -> None:
-        """
-        This constructor declares globale variables
-        with the self prefix and sets them to null, 
-        which is None in Python. The constructor is
-        called when an object is created with Grades().
-        """
-        self.quiz_1 = quiz_1
-        self.quiz_2 = quiz_2
-        self.midterm = midterm
-        self.project = project
-        self.final = final
+    quiz_1:float = 0 
+    quiz_2:float = 0 
+    midterm:float = 0 
+    project:float = 0 
+    final:float = 0
     
-    def load_grades_from_json(self,filepath):
+    @model_validator(mode="before")
+    @classmethod
+    def fill_missing(cls, data):
+        defaults = {
+            "quiz_1": 0,
+            "quiz_2": 0,
+            "midterm": 0,
+            "project": 0,
+            "final": 0
+        }
+
+        for key, val in defaults.items():
+            data.setdefault(key, val)
+            
+        return data
+    
+    @classmethod
+    def load_grades_from_json(cls,filepath):
         try:
-            with open(filepath, 'r') as f:
-                    data = json.load(f)
-            self.quiz_1 = data["quiz_1"]
-            self.quiz_2 = data["quiz_2"]
-            self.midterm = data["midterm"]
-            self.project = data["project"]
-            self.final = data["final"]
+            with open(filepath, 'r') as fp:
+                    data = json.load(fp)
         except FileNotFoundError:
             print(f"Error: File not found at {filepath}")
             return None
         except json.JSONDecodeError:
             print(f"Error: Invalid JSON format in {filepath}")
             return None
-        return data
+        return cls.model_validate(data)
         
     def __str__(self) -> str:
         """

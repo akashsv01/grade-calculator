@@ -6,8 +6,7 @@ from grade_calculator import GradeCalculator
 
 # This runs the grade calculation.
 
-# Instatiate Grade and Weights objects
-my_grades = Grades()
+# Instatiate Weights object
 weights = GradeWeights()
 
 # Set grades achieved so far
@@ -21,10 +20,15 @@ weights = GradeWeights()
 """
 
 # Getting the grades from the file directly
-my_grades.load_grades_from_json("app\\grades_exams.json")
+grades = Grades.load_grades_from_json("app\\grades_exams.json")
+# Print object 
+print("Grades object: " + str(grades)) 
+
+# Convert object back to JSON 
+print("JSON of the Grades object: " + grades.model_dump_json())
 
 # Calculate course grade based on the grades set above
-percentage_grade = GradeCalculator.calculate_course_percentage(my_grades, weights)
+percentage_grade = GradeCalculator.calculate_course_percentage(grades, weights)
 if percentage_grade is None:
     print("Can't calculate overall course grade without all individual grades.")
 else:
@@ -32,6 +36,6 @@ else:
     print(f'The letter grade with an overall {percentage_grade*100}% is {letter_grade}')
 
 # Calculate the grade assuming that all assignmets not turned in yet, will be 100%
-optimistic_percentage_grade = GradeCalculator.calculate_optimistic_course_percentage(my_grades, weights)
+optimistic_percentage_grade = GradeCalculator.calculate_optimistic_course_percentage(grades, weights)
 optimistic_letter_grade = GradeCalculator.calculate_letter_grade(optimistic_percentage_grade)
 print(f'If all other assignments are 100%, the overall course would be {optimistic_percentage_grade*100}%, which is a {optimistic_letter_grade}')
